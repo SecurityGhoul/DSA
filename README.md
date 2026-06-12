@@ -78,7 +78,7 @@ gcc -o dsa DSA.c -lssl -lcrypto
 ```
 ./dsa
 ```
-### 5. Execution Example
+## 5. Execution Example
 ```
 서명할 평문 메시지를 입력하세요
 Hello World!
