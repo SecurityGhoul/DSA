@@ -44,3 +44,47 @@ Hello World!
 (r,s) : (333013826, 354172751)
 ```
 
+# [English Version] (.translated by Gemini AI)
+
+This project is a security programming example that implements the **Digital Signature Algorithm (DSA)**, a cornerstone of public-key cryptography and data integrity verification, using the C language and the OpenSSL library.
+
+## 1. Project Overview
+* **Digital Signature (DSA)**: Designed not for message confidentiality, but for **identity verification (authentication)** and **data tampering prevention (integrity)**, based on the mathematical hardness of the Discrete Logarithm Problem.
+* **Plaintext Transmission**: The message itself is transmitted as clear plaintext, and verification is achieved by auditing the giant pair of integer signature components, $(r, s)$, bundled with the message.
+
+## 2. Key Features
+* **Cryptographically Secure Random Numbers**: Avoids insecure standard `rand()`, instead utilizing OpenSSL's `RAND_bytes` API to fetch robust randomness while mathematically eliminating Modulo Bias.
+* **Overflow-Resistant Logic (`ModPow`)**: To prevent data loss exceeding the `long long` boundary during large integer exponentiation, a custom modular exponentiation algorithm based on binary bitwise partitioning and addition was implemented.
+* **Rigorous Mathematical Pipeline**: Factoring $p-1$ from the user-supplied prime $p$ to isolate the subgroup order $q$, and mathematically deducing the generator $g$, private key $x$, and public key $y$.
+* **Secure Input & Buffer Handling**: Uses `fgets` to prevent buffer overflow vulnerabilities, featuring automatic newline (`\n`) trimming and a strict white-space restriction guard.
+* **Recursive Pointer Control**: Manages array indexing via C-style pass-by-reference pointers inside the `factorize` function, preventing index leaks across deep recursive stack frames.
+
+## 3. Signature Principles
+The program operates under the following cryptographic workflow:
+1. **Hash Transform**: Hashes the plaintext $M$ using standard OpenSSL SHA-256, extracting the first 8 bytes into a normalized 64-bit integer $H(M)$.
+2. **Component $r$ Generation**: Generates a random nonce $k$ to solve $r = (g^k \pmod p) \pmod q$.
+3. **Component $s$ Generation**: Obtains the modular inverse via the Extended Euclidean Algorithm (`revmod`), then computes $s = k^{-1}(H(M) + x \cdot r) \pmod q$ to lock the permanent signature pair $(r, s)$.
+
+## 4. How to Run
+This program requires the OpenSSL library dependencies.
+
+### Compile (GCC)
+```bash
+gcc -o dsa DSA.c -lssl -lcrypto
+```
+(For Windows Visual Studio, ensure OpenSSL Include/Library Directories are configured, and link libssl.lib and libcrypto.lib via Additional Dependencies.)
+
+### Run
+```
+./dsa
+```
+### 5. Execution Example
+```
+서명할 평문 메시지를 입력하세요
+Hello World!
+소수 p를 입력해주세요(공백 없이 숫자만 입력하세요)
+1000000007
+
+평문(plaintext) : Hello World!
+(r,s) : (333013826, 354172751)
+```
