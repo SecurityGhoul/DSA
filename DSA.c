@@ -234,8 +234,9 @@ int main()
 	{
 		printf("%c", M_buffer[i]);
 	}
-	printf("\n(r,s) : (%lld, %lld)", r, s);
+	printf("\n(r,s) : (%lld, %lld)\n", r, s);
 
+	printf("%lld %lld %lld %lld\n", p, q, g, y);
 
 	return 0;
 }
